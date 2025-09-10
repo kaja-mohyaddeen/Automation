@@ -5,8 +5,10 @@ Given("I visit {string}", (url) => { cy.visit(url); });
 
 Then("I extract the data", () => {
     let eventCode = "YW25";
-    const days = ["Day 1", "Day 2", "Day 3", " Day 4", "Day 5", "Day 6", "Day 7"];
-    const cages = ["Cage 1", "Cage 2", "Cage 3", "Cage 4", " Cage 5"];
+    const days = ["Day 1", "Day 2", "Day 3"];
+    // , " Day 4", "Day 5", "Day 6", "Day 7"];
+    const cages = ["Cage 1", "Cage 2", "Cage 3"]
+    // , "Cage 4", " Cage 5"];
     let allData = [];
     let streamData = [];
 
@@ -14,7 +16,11 @@ Then("I extract the data", () => {
 
         cy.get(pageObject.matchRow).each(($row) => {
             const matchNumber = $row.find(pageObject.matchNumber).text().trim();
+            //  Youth / Men / Youth A / Featherweight 65.8 kg (145 lbs) (Day 6) 
             const categoryText = $row.prev(pageObject.categoryRow).text().trim();
+            //  [ "Youth", "Women","Youth D","27 kg (59.5 lbs) (Day 1)"]
+            const parts = categoryText.split("/").map(p => p.trim());
+            const classVar = parts[2]; // eg Youth A
             const weight = categoryText.match(/(\d+(?:\.\d+)?\s?kg)/i)?.[0] || "";
             const participants = [];
 
@@ -25,12 +31,12 @@ Then("I extract the data", () => {
             });
 
             const [p1, p2] = participants;
-            const tags = [weight, p1?.name, p1?.club, p2?.name, p2?.club].filter(Boolean).join(", ");
+            const tags = [weight, classVar, p1?.name, p1?.club, p2?.name, p2?.club].filter(Boolean).join(", ");
             const dayCode = day.replace("Day ", "D");
             const cageCode = cage.replace("Cage ", "C");
             const streamTitle = `${eventCode.trim()}_${dayCode.trim()}${cageCode.trim()}_${matchNumber.split("-")[1]?.trim()}_${p1?.name} (${p1?.club?.trim()}) vs ${p2?.name} (${p2?.club?.trim()})`;
-            
-            allData.push({ eventCode, day, weight, cage, matchNumber, participants, tags, });
+
+            allData.push({ eventCode, day, weight, classVar, cage, matchNumber, participants, tags, });
             streamData.push({ streamTitle, tags, });
         });
 
@@ -58,7 +64,17 @@ Then("I extract the data", () => {
 
     cy.then(() => {
         cy.writeFile("cypress/fixtures/matches.json", allData, { flag: "w", });
-        cy.writeFile("cypress/fixtures/streams.json", streamData, { flag: "w", });
-        // Then I use online tool to convert JSON to Excel.
+        cy.writeFile("cypress/fixtures/streams.json", streamData, { flag: "w", })
     });
 });
+
+Then('I convert the json to excel for {string} from {string}', (file, jsonFile) => {
+    cy.readFile(`cypress/fixtures/${jsonFile}.json`).then((obj) => {
+        var nowDate = new Date();
+        var date = '-'+nowDate.getFullYear() + '-' + (nowDate.getMonth() + 1) + '-' + nowDate.getDate();
+        cy.task("exportToExcel", { data: obj, filename: `cypress/fixtures/${file + date}.xlsx` })
+            .then(() => {
+                cy.log("Excel created successfully");
+            });
+    });
+})
