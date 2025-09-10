@@ -1,73 +1,78 @@
-🚀 How to Run
+## 🚀 How to Run
+
 1. Install dependencies
+Make sure you’ve run
 
-Make sure you’ve run:
+	
 
-npm install
+		npm install
 
 2. Run Cypress tests
+	
+	Start Cypress with either of these commands:
 
-Start Cypress with either of these commands:
-
-npx cypress open    # Interactive mode
-npx cypress run     # Headless mode
+	    npx cypress open    # Interactive mode
+	    (or)
+	    npx cypress run     # Headless mode
 
 3. Check exported results
+	
+	After the tests finish, the Excel file will be created inside the cypress/downloads/ folder.
 
-After the tests finish, the Excel file will be created inside the cypress/downloads/ folder.
+	Filenames are automatically generated with today’s date, for example:
+			
 
-Filenames are automatically generated with today’s date, for example:
+		test-results_2025-09-10.xlsx
+		report_2025-09-11.xlsx
+	
+	📂 Output Location
 
-test-results_2025-09-10.xlsx
-report_2025-09-11.xlsx
+	All Excel reports will be saved in:
 
-📂 Output Location
+	    cypress/downloads/
 
-All Excel reports will be saved in:
-
-cypress/downloads/
-
-📊 Match & Stream Data
+## 📊 Match & Stream Data
 
 This project uses two JSON files to manage fight event information.
 
-1. streams.json
+1. **matches.json**
 
-Contains streaming details for each fight.
+	Contains detailed match information.
 
-streamTitle → Full title of the stream
+	Event details (code, day, cage, match number)
 
-tags → Keywords (weight, class, fighters, country)
+	Participants with name and club
 
-Example:
+	Tags for search and linking
+	
+	Example:
 
-{
-  "streamTitle": "YW25_D3C3_27_Abdulla Kamiev (Kazakhstan) vs ANTHONY BASSIL (Lebanon)",
-  "tags": "48 kg, Youth B, Abdulla Kamiev, Kazakhstan, ANTHONY BASSIL, Lebanon"
-}
+	    {
+	      "eventCode": "YW25",
+	      "day": "Day 3",
+	      "weight": "48 kg",
+	      "classVar": "Youth B",
+	      "cage": "Cage 3",
+	      "matchNumber": "3 - 35",
+	      "participants": [
+	        { "name": "Josef Moosa", "club": "South Africa" },
+	        { "name": "Ceejay Fenton", "club": "England" }
+	      ],
+	      "tags": "48 kg, Youth B, Josef Moosa, South Africa, Ceejay Fenton, England"
+	    }
+---
+2. **streams.json**
+	
+	Contains streaming details for each fight.
 
-2. matches.json
+	streamTitle → Full title of the stream
 
-Contains detailed match information.
+	tags → Keywords (weight, class, fighters, country)
 
-Event details (code, day, cage, match number)
+	Example:
 
-Participants with name and club
-
-Tags for search and linking
-
-Example:
-
-{
-  "eventCode": "YW25",
-  "day": "Day 3",
-  "weight": "48 kg",
-  "classVar": "Youth B",
-  "cage": "Cage 3",
-  "matchNumber": "3 - 35",
-  "participants": [
-    { "name": "Josef Moosa", "club": "South Africa" },
-    { "name": "Ceejay Fenton", "club": "England" }
-  ],
-  "tags": "48 kg, Youth B, Josef Moosa, South Africa, Ceejay Fenton, England"
-}
+	    {
+	      "streamTitle": "YW25_D3C3_27_Abdulla Kamiev (Kazakhstan) vs ANTHONY BASSIL (Lebanon)",
+	      "tags": "48 kg, Youth B, Abdulla Kamiev, Kazakhstan, ANTHONY BASSIL, Lebanon"
+	    }
+----
