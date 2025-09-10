@@ -5,10 +5,8 @@ Given("I visit {string}", (url) => { cy.visit(url); });
 
 Then("I extract the data", () => {
     let eventCode = "YW25";
-    const days = ["Day 1", "Day 2", "Day 3"];
-    // , " Day 4", "Day 5", "Day 6", "Day 7"];
-    const cages = ["Cage 1", "Cage 2", "Cage 3"]
-    // , "Cage 4", " Cage 5"];
+    const days = ["Day 1", "Day 2", "Day 3", " Day 4", "Day 5", "Day 6", "Day 7"];
+    const cages = ["Cage 1", "Cage 2", "Cage 3", "Cage 4", " Cage 5"];
     let allData = [];
     let streamData = [];
 
@@ -68,11 +66,11 @@ Then("I extract the data", () => {
     });
 });
 
-Then('I convert the json to excel for {string} from {string}', (file, jsonFile) => {
+Then('I convert the json to excel as {string} from {string}', (file, jsonFile) => {
     cy.readFile(`cypress/fixtures/${jsonFile}.json`).then((obj) => {
         var nowDate = new Date();
-        var date = '-'+nowDate.getFullYear() + '-' + (nowDate.getMonth() + 1) + '-' + nowDate.getDate();
-        cy.task("exportToExcel", { data: obj, filename: `cypress/fixtures/${file + date}.xlsx` })
+        var date = '-' + nowDate.getFullYear() + '-' + (nowDate.getMonth() + 1) + '-' + nowDate.getDate();
+        cy.task("exportToExcel", { data: obj, filename: `cypress/downloads/${file + date}.xlsx` })
             .then(() => {
                 cy.log("Excel created successfully");
             });
